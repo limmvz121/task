@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster - Ingat Tugas Woi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-box h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-box p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        /* Task Input Section */
+        .task-input-section {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 14px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Subject Selection Styles */
+        .subject-selection {
+            margin-bottom: 10px;
+        }
+
+        .subject-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .subject-btn {
+            padding: 10px 16px;
+            background: var(--gray-light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subject-btn:hover {
+            background: #e2e6ea;
+            transform: translateY(-2px);
+        }
+
+        .subject-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .subject-btn i {
+            font-size: 1.1rem;
+        }
+
+        .custom-subject-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .custom-subject-input input {
+            flex: 1;
+        }
+
+        .custom-subject-input button {
+            padding: 0 20px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .custom-subject-input button:hover {
+            background: #3aa8d0;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #d8dbe0;
+        }
+
+        /* Task List Section */
+        .task-list-section {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .task-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--gray-light);
+            border: none;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .task-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: var(--gray-light);
+            border-radius: 10px;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        /* Task Item */
+        .task-item {
+            background: white;
+            border-left: 5px solid var(--primary);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-item.high-priority {
+            border-left-color: var(--danger);
+        }
+
+        .task-item.medium-priority {
+            border-left-color: var(--warning);
+        }
+
+        .task-item.low-priority {
+            border-left-color: var(--success);
+        }
+
+        .task-item.completed {
+            opacity: 0.8;
+            background-color: #f9f9f9;
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .task-subject {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            color: var(--gray);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+
+        .task-category, .task-due-date, .task-priority {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray);
+        }
+
+        .task-category {
+            background: var(--gray-light);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-action-btn {
+            background: none;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .task-action-btn:hover {
+            background: var(--gray-light);
+        }
+
+        .task-action-btn.complete-btn {
+            color: var(--success);
+        }
+
+        .task-action-btn.edit-btn {
+            color: var(--primary);
+        }
+
+        .task-action-btn.delete-btn {
+            color: var(--danger);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .categories-section, .upcoming-section {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            background: var(--gray-light);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .category-item:hover {
+            background: #e2e6ea;
+        }
+
+        .category-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .category-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Subject Stats */
+        .subject-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .subject-stat {
+            background: var(--light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subject-stat i {
+            font-size: 0.9rem;
+        }
+
+        .upcoming-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .upcoming-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .upcoming-item:hover {
+            background: #f0f2f5;
+        }
+
+        .upcoming-date {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .upcoming-date .day {
+            font-size: 1.2rem;
+        }
+
+        .upcoming-date .month {
+            font-size: 0.8rem;
+        }
+
+        .upcoming-content h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .upcoming-content p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .subject-buttons {
+                justify-content: center;
+            }
+            
+            .task-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .filters {
+                flex-wrap: wrap;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .task-input-section, .task-list-section, .sidebar > div {
+                padding: 20px;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .task-actions {
+                align-self: flex-end;
+            }
+            
+            .subject-btn {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-item {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-tasks"></i>
+                <h1>TaskMaster - Tugas Woi</h1>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <h3 id="total-tasks">0</h3>
+                    <p>Total Tugas</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="completed-tasks">0</h3>
+                    <p>Selesai</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="pending-tasks">0</h3>
+                    <p>Belum Selesai</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <main>
+                <section class="task-input-section">
+                    <h2 class="section-title"><i class="fas fa-plus-circle"></i> Tambah Tugas Baru</h2>
+                    <form id="taskForm" class="task-form">
+                        <!-- Subject Selection -->
+                        <div class="form-group">
+                            <label for="taskSubject">Mata Pelajaran</label>
+                            <div class="subject-selection">
+                                <div class="subject-buttons" id="subjectButtons">
+                                    <!-- Subject buttons will be dynamically generated -->
+                                </div>
+                                <div class="custom-subject-input">
+                                    <input type="text" id="customSubject" placeholder="Mata pelajaran lainnya...">
+                                    <button type="button" id="addCustomSubject">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="selectedSubject" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskTitle">Judul Tugas</label>
+                            <input type="text" id="taskTitle" placeholder="Contoh: Kerjakan soal halaman 50" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDescription">Deskripsi Tugas (Opsional)</label>
+                            <textarea id="taskDescription" rows="3" placeholder="Detail tugas, instruksi khusus, atau catatan..."></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskCategory">Kategori</label>
+                                <select id="taskCategory">
+                                    <option value="tugas">Tugas</option>
+                                    <option value="ulangan">Ulangan</option>
+                                    <option value="proyek">Proyek</option>
+                                    <option value="presentasi">Presentasi</option>
+                                    <option value="laporan">Laporan</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskPriority">Prioritas</label>
+                                <select id="taskPriority">
+                                    <option value="low">Rendah</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="high">Tinggi</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDueDate">Tanggal Jatuh Tempo</label>
+                            <input type="datetime-local" id="taskDueDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Tambah Tugas
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="task-list-section">
+                    <div class="task-controls">
+                        <h2 class="section-title"><i class="fas fa-list-check"></i> Daftar Tugas</h2>
+                        <div class="filters">
+                            <button class="filter-btn active" data-filter="all">Semua</button>
+                            <button class="filter-btn" data-filter="pending">Belum Selesai</button>
+                            <button class="filter-btn" data-filter="completed">Selesai</button>
+                        </div>
+                    </div>
+                    
+                    <div id="taskList" class="task-list">
+                        <!-- Task items will be added here dynamically -->
+                        <div class="empty-state" id="emptyState">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Tidak ada tugas</h3>
+                            <p>Tambahkan tugas pertama Anda menggunakan form di atas</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <aside class="sidebar">
+                <section class="categories-section">
+                    <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Statistik Mata Pelajaran</h2>
+                    <div id="subjectStats" class="subject-stats">
+                        <!-- Subject stats will be added here dynamically -->
+                        <div class="empty-state">
+                            <p>Belum ada data mata pelajaran</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="upcoming-section">
+                    <h2 class="section-title"><i class="fas fa-calendar-day"></i> Jatuh Tempo</h2>
+                    <div id="upcomingList" class="upcoming-list">
+                        <!-- Upcoming tasks will be added here dynamically -->
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>Tidak ada tugas dengan jatuh tempo dekat</p>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // Aplikasi Task Manager dengan fitur mata pelajaran
+        class TaskManager {
+            constructor() {
+                this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                this.subjects = JSON.parse(localStorage.getItem('subjects')) || [
+                    { name: 'Matematika', icon: 'fa-calculator', color: '#4361ee' },
+                    { name: 'Bahasa Indonesia', icon: 'fa-book', color: '#f72585' },
+                    { name: 'Bahasa Inggris', icon: 'fa-language', color: '#4cc9f0' },
+                    { name: 'IPA', icon: 'fa-flask', color: '#7209b7' },
+                    { name: 'IPS', icon: 'fa-globe', color: '#f8961e' },
+                    { name: 'Fisika', icon: 'fa-atom', color: '#06d6a0' },
+                    { name: 'Kimia', icon: 'fa-vial', color: '#ef476f' },
+                    { name: 'Biologi', icon: 'fa-dna', color: '#118ab2' }
+                ];
+                this.currentFilter = 'all';
+                this.currentSubject = 'all';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.renderSubjectButtons();
+                this.render();
+                this.updateStats();
+                this.updateUpcomingTasks();
+                this.updateSubjectStats();
+                
+                // Set default due date to tomorrow 18:00
+                this.setDefaultDueDate();
+            }
+
+            setupEventListeners() {
+                // Form submission
+                document.getElementById('taskForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addTask();
+                });
+
+                // Custom subject button
+                document.getElementById('addCustomSubject').addEventListener('click', () => {
+                    this.addCustomSubject();
+                });
+
+                // Filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentFilter = btn.dataset.filter;
+                        this.render();
+                    });
+                });
+
+                // Enter key for custom subject
+                document.getElementById('customSubject').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.addCustomSubject();
+                    }
+                });
+            }
+
+            renderSubjectButtons() {
+                const container = document.getElementById('subjectButtons');
+                container.innerHTML = this.subjects.map((subject, index) => `
+                    <button type="button" class="subject-btn ${index === 0 ? 'active' : ''}" 
+                            data-subject="${subject.name}" 
+                            style="--subject-color: ${subject.color};"
+                            onclick="taskManager.selectSubject('${subject.name}')">
+                        <i class="fas ${subject.icon}"></i>
+                        ${subject.name}
+                    </button>
+                `).join('');
+                
+                // Set first subject as selected by default
+                if (this.subjects.length > 0) {
+                    this.selectSubject(this.subjects[0].name);
+                }
+            }
+
+            selectSubject(subjectName) {
+                // Update UI
+                document.querySelectorAll('.subject-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-subject="${subjectName}"]`).classList.add('active');
+                
+                // Store selected subject
+                document.getElementById('selectedSubject').value = subjectName;
+            }
+
+            addCustomSubject() {
+                const input = document.getElementById('customSubject');
+                const subjectName = input.value.trim();
+                
+                if (!subjectName) {
+                    alert('Masukkan nama mata pelajaran');
+                    return;
+                }
+                
+                // Check if subject already exists
+                if (this.subjects.some(s => s.name.toLowerCase() === subjectName.toLowerCase())) {
+                    alert('Mata pelajaran sudah ada');
+                    return;
+                }
+                
+                // Add new subject with random color and icon
+                const colors = ['#4361ee', '#f72585', '#4cc9f0', '#7209b7', '#f8961e', '#06d6a0', '#ef476f', '#118ab2'];
+                const icons = ['fa-book', 'fa-pen', 'fa-ruler', 'fa-paint-brush', 'fa-music', 'fa-code', 'fa-history', 'fa-map'];
+                
+                const newSubject = {
+                    name: subjectName,
+                    icon: icons[Math.floor(Math.random() * icons.length)],
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                };
+                
+                this.subjects.push(newSubject);
+                localStorage.setItem('subjects', JSON.stringify(this.subjects));
+                
+                // Re-render subject buttons and select the new subject
+                this.renderSubjectButtons();
+                this.selectSubject(subjectName);
+                
+                // Clear input
+                input.value = '';
+                
+                // Show success message
+                const addBtn = document.getElementById('addCustomSubject');
+                const originalHTML = addBtn.innerHTML;
+                addBtn.innerHTML = '<i class="fas fa-check"></i>';
+                addBtn.style.backgroundColor = '#4CAF50';
+                
+                setTimeout(() => {
+                    addBtn.innerHTML = originalHTML;
+                    addBtn.style.backgroundColor = '';
+                }, 1000);
+            }
+
+            addTask() {
+                const subject = document.getElementById('selectedSubject').value;
+                const title = document.getElementById('taskTitle').value.trim();
+                const description = document.getElementById('taskDescription').value.trim();
+                const category = document.getElementById('taskCategory').value;
+                const priority = document.getElementById('taskPriority').value;
+                const dueDate = document.getElementById('taskDueDate').value;
+
+                if (!subject) {
+                    alert('Pilih mata pelajaran terlebih dahulu');
+                    return;
+                }
+
+                if (!title) {
+                    alert('Judul tugas tidak boleh kosong');
+                    return;
+                }
+
+                const task = {
+                    id: Date.now(),
+                    subject,
+                    title,
+                    description,
+                    category,
+                    priority,
+                    dueDate,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+
+                this.tasks.unshift(task);
+                this.saveTasks();
+                this.render();
+                this.updateStats();
+                this.updateUpcomingTasks();
+                this.updateSubjectStats();
+                this.resetForm();
+
+                // Animasi feedback
+                const submitBtn = document.querySelector('#taskForm .btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Tugas Ditambahkan!';
+                submitBtn.style.backgroundColor = '#4CAF50';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.style.backgroundColor = '';
+                }, 1500);
+            }
+
+            setDefaultDueDate() {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(18, 0, 0, 0);
+                
+                // Format for datetime-local input (YYYY-MM-DDTHH:MM)
+                const formattedDate = tomorrow.toISOString().slice(0, 16);
+                document.getElementById('taskDueDate').value = formattedDate;
+            }
+
+            resetForm() {
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('taskTitle').focus();
+                this.setDefaultDueDate();
+            }
+
+            deleteTask(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus tugas ini?')) {
+                    this.tasks = this.tasks.filter(task => task.id !== id);
+                    this.saveTasks();
+                    this.render();
+                    this.updateStats();
+                    this.updateUpcomingTasks();
+                    this.updateSubjectStats();
+                }
+            }
+
+            toggleComplete(id) {
+                this.tasks = this.tasks.map(task => {
+                    if (task.id === id) {
+                        return { ...task, completed: !task.completed };
+                    }
+                    return task;
+                });
+                this.saveTasks();
+                this.render();
+                this.updateStats();
+                this.updateUpcomingTasks();
+                this.updateSubjectStats();
+            }
+
+            saveTasks() {
+                localStorage.setItem('tasks', JSON.stringify(this.tasks));
+            }
+
+            getFilteredTasks() {
+                let filtered = this.tasks;
+
+                // Apply status filter
+                if (this.currentFilter === 'pending') {
+                    filtered = filtered.filter(task => !task.completed);
+                } else if (this.currentFilter === 'completed') {
+                    filtered = filtered.filter(task => task.completed);
+                }
+
+                // Apply subject filter
+                if (this.currentSubject !== 'all') {
+                    filtered = filtered.filter(task => task.subject === this.currentSubject);
+                }
+
+                return filtered;
+            }
+
+            render() {
+                const taskList = document.getElementById('taskList');
+                const filteredTasks = this.getFilteredTasks();
+
+                if (filteredTasks.length === 0) {
+                    taskList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Tidak ada tugas</h3>
+                            <p>Tidak ada tugas yang cocok dengan filter saat ini</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                taskList.innerHTML = filteredTasks.map(task => this.createTaskElement(task)).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.complete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.target.closest('.task-item').dataset.id);
+                        this.toggleComplete(id);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = parseInt(e.target.closest('.task-item').dataset.id);
+                        this.deleteTask(id);
+                    });
+                });
+            }
+
+            createTaskElement(task) {
+                const priorityColors = {
+                    high: 'var(--danger)',
+                    medium: 'var(--warning)',
+                    low: 'var(--success)'
+                };
+
+                const priorityText = {
+                    high: 'Tinggi',
+                    medium: 'Sedang',
+                    low: 'Rendah'
+                };
+
+                const categoryNames = {
+                    tugas: 'Tugas',
+                    ulangan: 'Ulangan',
+                    proyek: 'Proyek',
+                    presentasi: 'Presentasi',
+                    laporan: 'Laporan'
+                };
+
+                const subject = this.subjects.find(s => s.name === task.subject);
+                const subjectColor = subject ? subject.color : '#4361ee';
+                const subjectIcon = subject ? subject.icon : 'fa-book';
+
+                const dueDate = task.dueDate ? new Date(task.dueDate) : null;
+                const dueDateFormatted = dueDate ? dueDate.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'Tidak ada';
+
+                const isOverdue = dueDate && dueDate < new Date() && !task.completed;
+
+                return `
+                    <div class="task-item ${task.priority}-priority ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <div>
+                                    <span class="task-subject" style="background-color: ${subjectColor}">
+                                        <i class="fas ${subjectIcon}"></i> ${task.subject}
+                                    </span>
+                                    <h3 class="task-title">${task.title}</h3>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action-btn complete-btn" title="${task.completed ? 'Tandai belum selesai' : 'Tandai selesai'}">
+                                        <i class="fas ${task.completed ? 'fa-rotate-left' : 'fa-check'}"></i>
+                                    </button>
+                                    <button class="task-action-btn delete-btn" title="Hapus tugas">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+                            <div class="task-meta">
+                                <span class="task-category">
+                                    <i class="fas fa-tag"></i> ${categoryNames[task.category]}
+                                </span>
+                                <span class="task-priority" style="color: ${priorityColors[task.priority]}">
+                                    <i class="fas fa-flag"></i> ${priorityText[task.priority]}
+                                </span>
+                                <span class="task-due-date ${isOverdue ? 'overdue' : ''}" style="${isOverdue ? 'color: var(--danger);' : ''}">
+                                    <i class="fas fa-calendar${isOverdue ? '-times' : ''}"></i> ${dueDateFormatted}
+                                    ${isOverdue ? ' (Terlambat)' : ''}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateStats() {
+                const totalTasks = this.tasks.length;
+                const completedTasks = this.tasks.filter(task => task.completed).length;
+                const pendingTasks = totalTasks - completedTasks;
+
+                document.getElementById('total-tasks').textContent = totalTasks;
+                document.getElementById('completed-tasks').textContent = completedTasks;
+                document.getElementById('pending-tasks').textContent = pendingTasks;
+            }
+
+            updateSubjectStats() {
+                const subjectStats = document.getElementById('subjectStats');
+                
+                if (this.tasks.length === 0) {
+                    subjectStats.innerHTML = `
+                        <div class="empty-state">
+                            <p>Belum ada data mata pelajaran</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Calculate stats per subject
+                const stats = {};
+                this.tasks.forEach(task => {
+                    if (!stats[task.subject]) {
+                        stats[task.subject] = { total: 0, completed: 0 };
+                    }
+                    stats[task.subject].total++;
+                    if (task.completed) {
+                        stats[task.subject].completed++;
+                    }
+                });
+
+                // Create stats elements
+                subjectStats.innerHTML = Object.entries(stats).map(([subject, data]) => {
+                    const subjectInfo = this.subjects.find(s => s.name === subject);
+                    const color = subjectInfo ? subjectInfo.color : '#4361ee';
+                    const icon = subjectInfo ? subjectInfo.icon : 'fa-book';
+                    const percentage = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
+
+                    return `
+                        <div class="subject-stat" style="border-left: 4px solid ${color}">
+                            <i class="fas ${icon}"></i>
+                            <strong>${subject}</strong>
+                            <span>${data.completed}/${data.total} (${percentage}%)</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            updateUpcomingTasks() {
+                const upcomingList = document.getElementById('upcomingList');
+                const now = new Date();
+                const nextWeek = new Date();
+                nextWeek.setDate(now.getDate() + 7);
+
+                // Get tasks due in the next 7 days, not completed
+                const upcomingTasks = this.tasks.filter(task => {
+                    if (task.completed || !task.dueDate) return false;
+                    const dueDate = new Date(task.dueDate);
+                    return dueDate >= now && dueDate <= nextWeek;
+                })
+                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                .slice(0, 4); // Limit to 4 tasks
+
+                if (upcomingTasks.length === 0) {
+                    upcomingList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>Tidak ada tugas dengan jatuh tempo dekat</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                upcomingList.innerHTML = upcomingTasks.map(task => {
+                    const subjectInfo = this.subjects.find(s => s.name === task.subject);
+                    const subjectColor = subjectInfo ? subjectInfo.color : '#4361ee';
+                    
+                    const dueDate = new Date(task.dueDate);
+                    const day = dueDate.getDate();
+                    const month = dueDate.toLocaleDateString('id-ID', { month: 'short' });
+                    const time = dueDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                    return `
+                        <div class="upcoming-item">
+                            <div class="upcoming-date" style="background-color: ${subjectColor}">
+                                <span class="day">${day}</span>
+                                <span class="month">${month}</span>
+                            </div>
+                            <div class="upcoming-content">
+                                <h4>${task.subject}</h4>
+                                <p>${task.title}</p>
+                                <small><i class="far fa-clock"></i> ${time}</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize task manager
+            window.taskManager = new TaskManager();
+        });
+    </script>
+</body>
+</html>
